@@ -2,565 +2,1012 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rainwater Family DC Trip 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Rainwater DC Trip 2026</title>
   <style>
     :root {
       --navy: #1a2e4a;
       --red: #c0392b;
       --gold: #d4a843;
-      --light: #f5f7fa;
+      --light: #f1f5f9;
       --white: #ffffff;
       --gray: #6b7280;
       --border: #e2e8f0;
-      --card: #ffffff;
+      --nav-h: 62px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--light);
       color: #1f2937;
       min-height: 100vh;
+      padding-bottom: var(--nav-h);
     }
 
-    /* HEADER */
-    header {
+    /* ── PAGE SHELL ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .page-header {
       background: var(--navy);
       color: white;
-      padding: 24px 20px 20px;
-      text-align: center;
+      padding: 14px 16px;
       position: sticky;
       top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      z-index: 90;
+      box-shadow: 0 2px 8px rgba(0,0,0,.3);
     }
-    header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; }
-    header p { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
-    .header-meta {
+    .page-header-row {
       display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 10px;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      max-width: 680px;
+      margin: 0 auto;
     }
-    .badge {
-      background: rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 0.78rem;
-      color: #cbd5e1;
+    .back-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 6px 0 0;
+    }
+    .page-header h1 { font-size: 1.05rem; font-weight: 700; }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--navy);
+      display: flex;
+      border-top: 1px solid rgba(255,255,255,.1);
+      z-index: 200;
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      gap: 3px;
+      transition: color .15s;
+    }
+    .nav-btn .ni { font-size: 1.35rem; line-height: 1; }
+    .nav-btn.active { color: var(--gold); }
+    .nav-btn:hover { color: #fff; }
+
+    /* ── CONTENT WRAPPER ── */
+    .content { max-width: 680px; margin: 0 auto; padding: 16px; }
+
+    /* ── HOME PAGE ── */
+    .home-hero {
+      background: var(--navy);
+      color: white;
+      padding: 36px 20px 28px;
+      text-align: center;
+    }
+    .home-hero h1 { font-size: 1.55rem; font-weight: 800; }
+    .home-hero .subtitle { font-size: .88rem; color: #94a3b8; margin-top: 6px; }
+    .home-hero .travelers { font-size: .85rem; color: var(--gold); font-weight: 700; margin-top: 8px; }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 20px 16px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .home-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 28px 12px 22px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      transition: all .18s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .home-card:hover, .home-card:active {
+      border-color: var(--navy);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,.13);
+    }
+    .home-card .hc-icon { font-size: 2.6rem; }
+    .home-card .hc-label {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.35;
     }
 
-    /* DAY TABS */
+    /* ── SHARED INFO CARDS ── */
+    .section-label {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin: 0 2px 8px;
+    }
+    .info-card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+    .info-card-hdr {
+      background: var(--navy);
+      color: white;
+      padding: 11px 16px;
+      font-size: .85rem;
+      font-weight: 700;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: .84rem;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-lbl { color: var(--gray); font-weight: 500; flex-shrink: 0; }
+    .info-val { font-weight: 600; text-align: right; line-height: 1.4; }
+    .conf { display: inline-block; background: #eff6ff; color: #1d4ed8; border-radius: 5px; padding: 2px 7px; font-size: .75rem; font-weight: 700; }
+
+    /* ── SCHEDULE ── */
     .day-tabs {
       display: flex;
       overflow-x: auto;
       background: var(--navy);
-      border-top: 1px solid rgba(255,255,255,0.1);
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
     .day-tabs::-webkit-scrollbar { display: none; }
     .day-tab {
       flex-shrink: 0;
-      padding: 10px 16px;
+      padding: 9px 13px;
       cursor: pointer;
       color: #94a3b8;
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: .72rem;
+      font-weight: 700;
       text-align: center;
       border-bottom: 3px solid transparent;
-      transition: all 0.2s;
       white-space: nowrap;
+      transition: all .15s;
     }
+    .day-tab .dn { font-size: 1.05rem; display: block; }
     .day-tab:hover { color: white; }
-    .day-tab.active {
-      color: var(--gold);
-      border-bottom-color: var(--gold);
-    }
-    .day-tab .date-num { font-size: 1.1rem; display: block; }
-
-    /* MAIN CONTENT */
-    main { max-width: 680px; margin: 0 auto; padding: 16px; }
-
+    .day-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
     .day-panel { display: none; }
     .day-panel.active { display: block; }
-
-    .day-header {
+    .day-hdr {
       background: var(--navy);
       color: white;
-      border-radius: 12px 12px 0 0;
-      padding: 16px 20px;
+      padding: 13px 16px;
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    .day-header .theme-icon { font-size: 1.8rem; }
-    .day-header h2 { font-size: 1.1rem; font-weight: 700; }
-    .day-header .day-date { font-size: 0.82rem; color: #94a3b8; margin-top: 2px; }
-
-    .events-list {
-      background: var(--card);
-      border-radius: 0 0 12px 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      border-top: none;
-      margin-bottom: 20px;
-    }
-    .event {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
+    .day-hdr .dh-icon { font-size: 1.55rem; }
+    .day-hdr h2 { font-size: .95rem; font-weight: 700; }
+    .day-hdr .dh-date { font-size: .75rem; color: #94a3b8; margin-top: 1px; }
+    .events { background: var(--white); }
+    .ev {
       display: flex;
-      gap: 14px;
-      align-items: flex-start;
-    }
-    .event:last-child { border-bottom: none; }
-    .event-time {
-      min-width: 62px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--navy);
-      padding-top: 2px;
-      text-align: right;
-    }
-    .event-body { flex: 1; }
-    .event-title { font-size: 0.95rem; font-weight: 600; color: #111827; }
-    .event-note { font-size: 0.82rem; color: var(--gray); margin-top: 3px; line-height: 1.4; }
-
-    .conf-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 7px;
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      border-radius: 6px;
-      padding: 3px 9px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-    .pill-conf { background: #eff6ff; color: #1d4ed8; }
-    .pill-addr { background: #f0fdf4; color: #15803d; }
-    .pill-cost { background: #fefce8; color: #a16207; }
-    .pill-alert { background: #fff7ed; color: #c2410c; }
-    .pill-phone { background: #f5f3ff; color: #6d28d9; }
-
-    .section-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gray);
-      padding: 10px 18px 4px;
-      background: #f8fafc;
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* TRIP INFO CARD */
-    .info-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-bottom: 16px;
-      overflow: hidden;
-    }
-    .info-card-header {
-      background: var(--red);
-      color: white;
-      padding: 10px 16px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .info-card-body { padding: 14px 16px; }
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      font-size: 0.85rem;
-      padding: 5px 0;
+      gap: 12px;
+      padding: 11px 16px;
       border-bottom: 1px solid #f1f5f9;
     }
-    .info-row:last-child { border-bottom: none; }
-    .info-label { color: var(--gray); font-weight: 500; }
-    .info-value { font-weight: 600; text-align: right; }
-
-    /* STILL TO BOOK */
-    .todo-card {
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 20px;
-    }
-    .todo-card h3 {
-      font-size: 0.85rem;
+    .ev:last-child { border-bottom: none; }
+    .ev-time {
+      min-width: 55px;
+      font-size: .72rem;
       font-weight: 700;
-      color: #c2410c;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 10px;
+      color: var(--navy);
+      text-align: right;
+      flex-shrink: 0;
+      padding-top: 2px;
     }
-    .todo-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 0.85rem;
-      margin-bottom: 8px;
-      color: #7c2d12;
-    }
-    .todo-item:last-child { margin-bottom: 0; }
+    .ev-title { font-size: .88rem; font-weight: 600; }
+    .ev-note { font-size: .78rem; color: var(--gray); margin-top: 2px; line-height: 1.4; }
+    .ev-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+    .pill { border-radius: 5px; padding: 2px 6px; font-size: .7rem; font-weight: 600; }
+    .p-conf { background: #eff6ff; color: #1d4ed8; }
+    .p-addr { background: #f0fdf4; color: #15803d; }
+    .p-cost { background: #fefce8; color: #a16207; }
+    .p-alert { background: #fff7ed; color: #c2410c; }
+    .p-phone { background: #f5f3ff; color: #6d28d9; }
 
-    @media (max-width: 480px) {
-      header h1 { font-size: 1.2rem; }
-      .event { padding: 12px 14px; }
-      .event-time { min-width: 55px; }
+    /* ── PACKING LIST ── */
+    .progress-row {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
+    .pb-wrap { flex: 1; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .pb-fill { height: 100%; background: #22c55e; border-radius: 4px; transition: width .3s; }
+    .pb-text { font-size: .78rem; font-weight: 700; color: var(--gray); white-space: nowrap; }
+    .filter-row { display: flex; gap: 7px; margin-bottom: 14px; flex-wrap: wrap; }
+    .fbtn {
+      padding: 6px 13px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: white;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--gray);
+      transition: all .15s;
+    }
+    .fbtn.active { background: var(--navy); border-color: var(--navy); color: white; }
+    .pack-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 8px;
+      transition: opacity .2s;
+    }
+    .pack-item.done { opacity: .5; }
+    .pack-item.done .pi-name { text-decoration: line-through; color: var(--gray); }
+    .chk {
+      width: 24px; height: 24px;
+      border-radius: 7px;
+      border: 2px solid #d1d5db;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      font-size: .85rem;
+      transition: all .15s;
+      user-select: none;
+    }
+    .chk.on { background: #22c55e; border-color: #22c55e; color: white; }
+    .pi-info { flex: 1; }
+    .pi-name { font-size: .9rem; font-weight: 600; }
+    .pi-tag {
+      display: inline-block;
+      font-size: .7rem; font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-top: 4px;
+    }
+    .t-Chase { background: #dbeafe; color: #1e40af; }
+    .t-Candace { background: #fce7f3; color: #9d174d; }
+    .t-Sawyer { background: #dcfce7; color: #166534; }
+    .t-Everyone { background: #f3f4f6; color: #374151; }
+    .pi-del { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; padding: 4px; opacity: .55; }
+    .pi-del:hover { opacity: 1; }
+
+    /* ── PICTURES ── */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      padding-top: 4px;
+    }
+    @media(min-width: 480px) { .photo-grid { grid-template-columns: repeat(4, 1fr); } }
+    .photo-cell {
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: #e2e8f0;
+      cursor: pointer;
+    }
+    .photo-cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .15s; }
+    .photo-cell:hover img { opacity: .82; }
+
+    /* ── FAB ── */
+    .fab {
+      position: fixed;
+      bottom: calc(var(--nav-h) + 16px);
+      right: 20px;
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: var(--red);
+      color: white;
+      font-size: 1.7rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,.28);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 150;
+      transition: transform .15s;
+    }
+    .fab:hover { transform: scale(1.08); }
+    .fab.vis { display: flex; }
+
+    /* ── MODAL (add packing item) ── */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.52);
+      z-index: 300;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .overlay.vis { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px 36px;
+      width: 100%;
+      max-width: 520px;
+    }
+    .modal h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 18px; }
+    .fg { margin-bottom: 15px; }
+    .fg label { display: block; font-size: .8rem; font-weight: 600; color: var(--gray); margin-bottom: 6px; }
+    .fg input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .95rem;
+      outline: none;
+    }
+    .fg input:focus { border-color: var(--navy); }
+    .person-grid { display: flex; gap: 7px; }
+    .per-opt {
+      flex: 1;
+      padding: 10px 4px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--gray);
+      line-height: 1.5;
+      transition: all .15s;
+      user-select: none;
+    }
+    .per-opt.sel-Chase { background: #dbeafe; border-color: #1e40af; color: #1e40af; }
+    .per-opt.sel-Candace { background: #fce7f3; border-color: #9d174d; color: #9d174d; }
+    .per-opt.sel-Sawyer { background: #dcfce7; border-color: #166534; color: #166534; }
+    .per-opt.sel-Everyone { background: #f3f4f6; border-color: #374151; color: #374151; }
+    .btn-prim {
+      width: 100%; padding: 13px;
+      background: var(--navy); color: white;
+      border: none; border-radius: 10px;
+      font-size: .95rem; font-weight: 700;
+      cursor: pointer; margin-top: 6px;
+    }
+    .btn-prim:hover { background: #243d5f; }
+    .btn-cancel {
+      width: 100%; padding: 11px;
+      background: none; border: none;
+      color: var(--gray); cursor: pointer;
+      font-size: .88rem; margin-top: 8px;
+    }
+
+    /* ── LIGHTBOX ── */
+    .lbx {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.96);
+      z-index: 400;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .lbx.vis { display: flex; }
+    .lbx-img { max-width: 100%; max-height: calc(100vh - 110px); object-fit: contain; border-radius: 4px; }
+    .lbx-controls { position: absolute; top: 14px; right: 14px; display: flex; gap: 8px; }
+    .lbx-btn {
+      background: rgba(255,255,255,.15); border: none; color: white;
+      border-radius: 50%; width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.05rem;
+    }
+    .lbx-btn:hover { background: rgba(255,255,255,.28); }
+    .lbx-cap { color: rgba(255,255,255,.55); font-size: .78rem; margin-top: 10px; }
+
+    /* ── UTILITY ── */
+    .empty { text-align: center; padding: 52px 20px; color: var(--gray); }
+    .empty .ei { font-size: 2.8rem; margin-bottom: 10px; }
+    .empty p { font-size: .88rem; }
+    .banner {
+      background: #fff7ed; border: 1px solid #fed7aa;
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;
+    }
+    .banner h4 { font-size: .82rem; font-weight: 700; color: #c2410c; margin-bottom: 4px; }
+    .banner p { font-size: .78rem; color: #7c2d12; line-height: 1.55; }
+    .loading { text-align: center; padding: 40px; color: var(--gray); font-size: .88rem; }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>🗽 Rainwater Family DC Trip 2026</h1>
-  <p>June 29 – July 9 · Pentagon City, Arlington VA</p>
-  <div class="header-meta">
-    <span class="badge">👨‍👩‍👦 Chase · Candace · Sawyer</span>
-    <span class="badge">🏠 1401 S Joyce St #1112</span>
+<!-- ══════════════════════════ HOME ══════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="home-hero">
+    <h1>🗽 Rainwater DC Trip 2026</h1>
+    <div class="subtitle">June 29 – July 9 · Pentagon City, Arlington VA</div>
+    <div class="travelers">Chase · Candace · Sawyer</div>
   </div>
-</header>
+  <div class="home-grid">
+    <div class="home-card" onclick="go('lodging')">
+      <div class="hc-icon">🏨</div>
+      <div class="hc-label">Lodging &amp;<br>Transportation</div>
+    </div>
+    <div class="home-card" onclick="go('schedule')">
+      <div class="hc-icon">📅</div>
+      <div class="hc-label">Daily<br>Schedule</div>
+    </div>
+    <div class="home-card" onclick="go('packing')">
+      <div class="hc-icon">🧳</div>
+      <div class="hc-label">Packing<br>List</div>
+    </div>
+    <div class="home-card" onclick="go('pictures')">
+      <div class="hc-icon">📸</div>
+      <div class="hc-label">Pictures</div>
+    </div>
+  </div>
+</div>
 
-<div class="day-tabs" id="dayTabs"></div>
+<!-- ══════════════════════ LODGING PAGE ══════════════════════ -->
+<div id="page-lodging" class="page">
+  <div class="page-header">
+    <div class="page-header-row">
+      <button class="back-btn" onclick="go('home')">←</button>
+      <h1>Lodging &amp; Transportation</h1>
+    </div>
+  </div>
+  <div class="content">
 
-<main id="mainContent"></main>
+    <div class="section-label" style="margin-top:4px">🏠 Lodging</div>
+    <div class="info-card">
+      <div class="info-card-hdr">Airbnb · Pentagon City</div>
+      <div class="info-row"><span class="info-lbl">Address</span><span class="info-val">1401 S Joyce St #1112<br>Arlington VA 22202</span></div>
+      <div class="info-row"><span class="info-lbl">Check-in</span><span class="info-val">Jun 29 · 3:00 PM</span></div>
+      <div class="info-row"><span class="info-lbl">Check-out</span><span class="info-val">Jul 9 · 11:00 AM</span></div>
+      <div class="info-row"><span class="info-lbl">Duration</span><span class="info-val">10 nights</span></div>
+    </div>
+
+    <div class="section-label">✈️ Flights</div>
+    <div class="info-card">
+      <div class="info-card-hdr">Inbound — Jun 29</div>
+      <div class="info-row"><span class="info-lbl">Flight</span><span class="info-val">American Airlines AA3824</span></div>
+      <div class="info-row"><span class="info-lbl">Route</span><span class="info-val">XNA → DCA</span></div>
+      <div class="info-row"><span class="info-lbl">Arrives</span><span class="info-val">10:49 AM</span></div>
+      <div class="info-row"><span class="info-lbl">Confirmation</span><span class="info-val"><span class="conf">IUOUGR</span></span></div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-hdr">Outbound — Jul 9</div>
+      <div class="info-row"><span class="info-lbl">Flight</span><span class="info-val">American Airlines</span></div>
+      <div class="info-row"><span class="info-lbl">Route</span><span class="info-val">DCA → XNA</span></div>
+      <div class="info-row"><span class="info-lbl">Departs</span><span class="info-val">7:57 PM</span></div>
+      <div class="info-row"><span class="info-lbl">Confirmation</span><span class="info-val"><span class="conf">IUOUGR</span></span></div>
+    </div>
+
+    <div class="section-label">🚗 Rental Car</div>
+    <div class="info-card">
+      <div class="info-card-hdr">Avis · Jul 5–6</div>
+      <div class="info-row"><span class="info-lbl">Pickup</span><span class="info-val">Jul 5 · 8:00 AM</span></div>
+      <div class="info-row"><span class="info-lbl">Return</span><span class="info-val">Jul 6 · 8:00 AM</span></div>
+      <div class="info-row"><span class="info-lbl">Vehicle</span><span class="info-val">Ford Mustang Mach-E or similar</span></div>
+      <div class="info-row"><span class="info-lbl">Location</span><span class="info-val">1100 S Hayes St<br>Arlington VA 22202</span></div>
+      <div class="info-row"><span class="info-lbl">Avis Conf</span><span class="info-val"><span class="conf">17154969US6</span></span></div>
+      <div class="info-row"><span class="info-lbl">Priceline</span><span class="info-val"><span class="conf">361-942-063-97</span></span></div>
+    </div>
+
+    <div class="section-label">🚆 Train / Amtrak</div>
+    <div class="info-card">
+      <div class="info-card-hdr">Philadelphia Day Trip — Jul 2</div>
+      <div class="info-row"><span class="info-lbl">Train Out</span><span class="info-val">Amtrak 172 · Departs 7:06 AM</span></div>
+      <div class="info-row"><span class="info-lbl">From</span><span class="info-val">DC Union Station</span></div>
+      <div class="info-row"><span class="info-lbl">Arrives</span><span class="info-val">Philadelphia 30th St · 9:08 AM</span></div>
+      <div class="info-row"><span class="info-lbl">Train Back</span><span class="info-val">Amtrak 193 · Departs 6:51 PM</span></div>
+      <div class="info-row"><span class="info-lbl">Reservation</span><span class="info-val"><span class="conf">47A56A</span></span></div>
+      <div class="info-row"><span class="info-lbl">Cost</span><span class="info-val">$168</span></div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-hdr">Baltimore Day Trip — Jul 7</div>
+      <div class="info-row"><span class="info-lbl">Train Out</span><span class="info-val">MARC/Amtrak · Departs 11:06 AM</span></div>
+      <div class="info-row"><span class="info-lbl">From</span><span class="info-val">DC Union Station</span></div>
+      <div class="info-row"><span class="info-lbl">Arrives</span><span class="info-val">Baltimore Penn Station</span></div>
+      <div class="info-row"><span class="info-lbl">Train Back</span><span class="info-val">Departs 10:38 PM</span></div>
+      <div class="info-row"><span class="info-lbl">Reservation</span><span class="info-val"><span class="conf">47AAD6</span></span></div>
+      <div class="info-row"><span class="info-lbl">Cost</span><span class="info-val">$66</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════ SCHEDULE PAGE ══════════════════════ -->
+<div id="page-schedule" class="page">
+  <div class="page-header">
+    <div class="page-header-row">
+      <button class="back-btn" onclick="go('home')">←</button>
+      <h1>Daily Schedule</h1>
+    </div>
+  </div>
+  <div id="dayTabs" class="day-tabs"></div>
+  <div id="dayPanels"></div>
+</div>
+
+<!-- ══════════════════════ PACKING PAGE ══════════════════════ -->
+<div id="page-packing" class="page">
+  <div class="page-header">
+    <div class="page-header-row">
+      <button class="back-btn" onclick="go('home')">←</button>
+      <h1>Packing List</h1>
+    </div>
+  </div>
+  <div class="content">
+    <div id="pack-banner" class="banner" style="display:none">
+      <h4>☁️ Offline Mode — Device Only</h4>
+      <p>Items are saved on this device only. To sync across all family devices, add your Firebase config to the HTML (see the Firebase Setup section at the bottom of this page).</p>
+    </div>
+    <div class="progress-row">
+      <div class="pb-wrap"><div class="pb-fill" id="pbFill" style="width:0%"></div></div>
+      <span class="pb-text" id="pbText">0 / 0 packed</span>
+    </div>
+    <div class="filter-row">
+      <button class="fbtn active" id="f-All"      onclick="setFilter('All')">All</button>
+      <button class="fbtn"        id="f-Chase"    onclick="setFilter('Chase')">Chase</button>
+      <button class="fbtn"        id="f-Candace"  onclick="setFilter('Candace')">Candace</button>
+      <button class="fbtn"        id="f-Sawyer"   onclick="setFilter('Sawyer')">Sawyer</button>
+      <button class="fbtn"        id="f-Everyone" onclick="setFilter('Everyone')">Everyone</button>
+    </div>
+    <div id="packItems"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PICTURES PAGE ══════════════════════ -->
+<div id="page-pictures" class="page">
+  <div class="page-header">
+    <div class="page-header-row">
+      <button class="back-btn" onclick="go('home')">←</button>
+      <h1>Trip Pictures</h1>
+    </div>
+  </div>
+  <div id="pic-banner" class="banner" style="margin:16px 16px 0;display:none">
+    <h4>⚙️ Firebase Required for Shared Photos</h4>
+    <p>To upload photos that are visible to all family members, add your Firebase project config to this HTML file. Until then, the photo feature is unavailable.</p>
+  </div>
+  <div id="photoGrid" class="photo-grid"></div>
+  <div id="photoEmpty" class="empty" style="display:none">
+    <div class="ei">📷</div>
+    <p>No photos yet.<br>Tap + to add the first one!</p>
+  </div>
+  <div id="photoLoading" class="loading">Loading photos…</div>
+  <input type="file" id="picInput" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)" />
+</div>
+
+<!-- ══════════════════════ BOTTOM NAV ══════════════════════ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nb-home"     onclick="go('home')">    <span class="ni">🏠</span>Home</button>
+  <button class="nav-btn"        id="nb-lodging"  onclick="go('lodging')"> <span class="ni">🏨</span>Lodging</button>
+  <button class="nav-btn"        id="nb-schedule" onclick="go('schedule')"><span class="ni">📅</span>Schedule</button>
+  <button class="nav-btn"        id="nb-packing"  onclick="go('packing')"> <span class="ni">🧳</span>Packing</button>
+  <button class="nav-btn"        id="nb-pictures" onclick="go('pictures')"><span class="ni">📸</span>Photos</button>
+</nav>
+
+<!-- FABs -->
+<button class="fab" id="fab-pack" onclick="openModal()">+</button>
+<button class="fab" id="fab-pic"  onclick="document.getElementById('picInput').click()">+</button>
+
+<!-- ══════════════════════ ADD ITEM MODAL ══════════════════════ -->
+<div class="overlay" id="addModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3>➕ Add Packing Item</h3>
+    <div class="fg">
+      <label>Item Name</label>
+      <input type="text" id="itemName" placeholder="e.g. Sunscreen, Passport, Camera…" />
+    </div>
+    <div class="fg">
+      <label>Assign To</label>
+      <div class="person-grid">
+        <div class="per-opt" id="p-Chase"    onclick="pickPerson('Chase')">👨<br>Chase</div>
+        <div class="per-opt" id="p-Candace"  onclick="pickPerson('Candace')">👩<br>Candace</div>
+        <div class="per-opt" id="p-Sawyer"   onclick="pickPerson('Sawyer')">👦<br>Sawyer</div>
+        <div class="per-opt" id="p-Everyone" onclick="pickPerson('Everyone')">👨‍👩‍👦<br>All</div>
+      </div>
+    </div>
+    <button class="btn-prim" onclick="addItem()">Add Item</button>
+    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══════════════════════ LIGHTBOX ══════════════════════ -->
+<div class="lbx" id="lbx" onclick="if(event.target===this)closeLbx()">
+  <div class="lbx-controls">
+    <button class="lbx-btn" onclick="deletePhoto()" title="Delete photo">🗑️</button>
+    <button class="lbx-btn" onclick="closeLbx()">✕</button>
+  </div>
+  <img class="lbx-img" id="lbxImg" src="" alt="" />
+  <div class="lbx-cap" id="lbxCap"></div>
+</div>
+
+<!-- ══════════════════════ FIREBASE SDKs ══════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
-const days = [
-  {
-    date: "Jun 29", dayOfWeek: "Mon", icon: "✈️", theme: "ARRIVE",
-    events: [
-      { time: "10:49 AM", title: "Land at DCA", note: "Flight AA3824 from XNA", pills: [
-        { type: "conf", label: "Conf: IUOUGR" }
-      ]},
-      { time: "11:15 AM", title: "Metro to Pentagon City", note: "Blue/Yellow line from Reagan National" },
-      { time: "11:30 AM", title: "Fashion Centre at Pentagon City", note: "Lunch & decompress after travel", pills: [
-        { type: "addr", label: "1100 S Hayes St, Arlington VA" }
-      ]},
-      { time: "3:00 PM", title: "Check in to Airbnb", pills: [
-        { type: "addr", label: "1401 S Joyce St #1112, Arlington VA 22202" }
-      ]},
-      { time: "5:00 PM", title: "Great American State Fair", note: "National Mall · Free · Open until 9 PM", pills: [
-        { type: "addr", label: "National Mall, Washington DC" },
-        { type: "cost", label: "Free" }
-      ]}
-    ]
-  },
-  {
-    date: "Jun 30", dayOfWeek: "Tue", icon: "🏛️", theme: "MUSEUMS",
-    events: [
-      { time: "9:45 AM", title: "Arrive Holocaust Museum", note: "Enter via 14th St entrance", pills: [
-        { type: "addr", label: "100 Raoul Wallenberg Pl SW, DC" },
-        { type: "conf", label: "Order #457665617" }
-      ]},
-      { time: "10:00 AM", title: "US Holocaust Memorial Museum", note: "3 tickets confirmed · Allow 3+ hours", pills: [
-        { type: "cost", label: "3 Tickets" }
-      ]},
-      { time: "1:30 PM", title: "Lunch near National Mall", note: "TBD — many options on 14th St" },
-      { time: "2:30 PM", title: "National Museum of African American History & Culture", note: "3 passes confirmed · Until 6:00 PM", pills: [
-        { type: "addr", label: "1400 Constitution Ave NW, DC" },
-        { type: "conf", label: "3 passes confirmed" }
-      ]},
-      { time: "6:00 PM", title: "Evening free", note: "Optional dinner near Mall" }
-    ]
-  },
-  {
-    date: "Jul 1", dayOfWeek: "Wed", icon: "🚀", theme: "SCIENCE",
-    events: [
-      { time: "10:00 AM", title: "Air and Space Museum", note: "Free admission · Until 12:30 PM", pills: [
-        { type: "addr", label: "600 Independence Ave SW, DC" },
-        { type: "cost", label: "Free" }
-      ]},
-      { time: "12:30 PM", title: "Lunch near Mall", note: "TBD" },
-      { time: "2:00 PM", title: "National Geographic Museum", note: "Until 4:30 PM · ~$20/adult", pills: [
-        { type: "addr", label: "1145 17th St NW, DC" },
-        { type: "cost", label: "~$20/adult" }
-      ]},
-      { time: "Dusk", title: "Optional Monuments Walk", note: "Lincoln · WWII · Vietnam · Korea · MLK" }
-    ]
-  },
-  {
-    date: "Jul 2", dayOfWeek: "Thu", icon: "🔔", theme: "PHILADELPHIA",
-    events: [
-      { time: "6:30 AM", title: "Metro to Union Station", note: "Allow extra time for early morning" },
-      { time: "7:06 AM", title: "Amtrak Train 172 Departs", note: "Washington Union Station → Philadelphia 30th St", pills: [
-        { type: "conf", label: "Res: 47A56A" },
-        { type: "cost", label: "$168 RT" },
-        { type: "addr", label: "50 Massachusetts Ave NE, DC" }
-      ]},
-      { time: "9:08 AM", title: "Arrive Philadelphia 30th St Station", pills: [
-        { type: "addr", label: "2955 Market St, Philadelphia PA" }
-      ]},
-      { time: "9:30 AM", title: "Liberty Bell Center", note: "Free · Walk-in · No ticket needed", pills: [
-        { type: "addr", label: "526 Market St, Philadelphia PA" },
-        { type: "cost", label: "Free" }
-      ]},
-      { time: "10:00 AM", title: "Independence Hall", note: "No ticket required Jul 2 · First-come first-served", pills: [
-        { type: "addr", label: "520 Chestnut St, Philadelphia PA" },
-        { type: "cost", label: "Free" }
-      ]},
-      { time: "11:00 AM", title: "National Constitution Center", pills: [
-        { type: "addr", label: "525 Arch St, Philadelphia PA" },
-        { type: "cost", label: "~$20/adult" }
-      ]},
-      { time: "12:00 PM", title: "Uber to Citizens Bank Park" },
-      { time: "12:35 PM", title: "⚾ Phillies vs Pirates", note: "Citizens Bank Park · 3 tickets (SeatGeek)", pills: [
-        { type: "addr", label: "1 Citizens Bank Way, Philadelphia PA" },
-        { type: "conf", label: "3 tickets via SeatGeek" }
-      ]},
-      { time: "3:30 PM", title: "Uber to Italian Market (9th Street)", pills: [
-        { type: "addr", label: "9th St, Philadelphia PA (Italian Market)" }
-      ]},
-      { time: "5:00 PM", title: "Dinner — Italian Market Area", note: "TBD" },
-      { time: "6:30 PM", title: "Uber to 30th Street Station" },
-      { time: "6:51 PM", title: "Amtrak Train 193 Returns to DC", note: "Departs 30th St Station", pills: [
-        { type: "conf", label: "Res: 47A56A" }
-      ]},
-      { time: "~8:30 PM", title: "Back in Arlington", note: "Metro from Union Station to Pentagon City" }
-    ]
-  },
-  {
-    date: "Jul 3", dayOfWeek: "Fri", icon: "🕵️", theme: "HISTORY & SPY",
-    events: [
-      { time: "10:00 AM", title: "American History Museum", note: "America 250 exhibit · Free · Until 1 PM", pills: [
-        { type: "addr", label: "1300 Constitution Ave NW, DC" },
-        { type: "cost", label: "Free" }
-      ]},
-      { time: "1:00 PM", title: "Lunch near Mall", note: "TBD" },
-      { time: "7:00 PM", title: "Spy Tour", note: "Book via Viator or operator — NOT YET BOOKED", pills: [
-        { type: "alert", label: "⚠️ Still to Book" }
-      ]}
-    ]
-  },
-  {
-    date: "Jul 4", dayOfWeek: "Sat", icon: "🎆", theme: "INDEPENDENCE DAY",
-    events: [
-      { time: "9:30 AM", title: "Metro to Nationals Park", note: "Blue → Yellow → Navy Yard station" },
-      { time: "11:05 AM", title: "⚾ Nationals vs Pirates", note: "Nationals Park · 3 tickets confirmed", pills: [
-        { type: "addr", label: "1500 S Capitol St SE, DC" },
-        { type: "conf", label: "3 tickets confirmed" }
-      ]},
-      { time: "~2:00 PM", title: "Head to Alexandria" },
-      { time: "~3:00 PM", title: "Explore Old Town Alexandria Waterfront", pills: [
-        { type: "addr", label: "Old Town Alexandria, VA" }
-      ]},
-      { time: "7:00 PM", title: "🍽️ Dinner — Founding Farmers Alexandria", pills: [
-        { type: "addr", label: "461 Swann Ave, Alexandria VA" },
-        { type: "conf", label: "Conf: 99064" },
-        { type: "phone", label: "703-594-1445" }
-      ]},
-      { time: "~8:45 PM", title: "Walk to Alexandria Waterfront for Fireworks" },
-      { time: "~9:15 PM", title: "America 250 Fireworks", note: "DC skyline view across the Potomac 🎇" }
-    ]
-  },
-  {
-    date: "Jul 5", dayOfWeek: "Sun", icon: "⚔️", theme: "GETTYSBURG",
-    events: [
-      { time: "8:00 AM", title: "Pick Up Avis Rental Car", note: "Ford Mustang Mach-E or similar", pills: [
-        { type: "addr", label: "1100 S Hayes St, Arlington VA 22202" },
-        { type: "conf", label: "Avis: 17154969US6" },
-        { type: "conf", label: "Priceline: 361-942-063-97" }
-      ]},
-      { time: "~10:00 AM", title: "Drive to Gettysburg", note: "~1.5 hours" },
-      { time: "11:50 AM", title: "Arrive Gettysburg Heritage Center", note: "Meet guide Paul Bailey in lobby", pills: [
-        { type: "addr", label: "297 Steinwehr Ave, Gettysburg PA" },
-        { type: "conf", label: "Conf: 585B3C" },
-        { type: "cost", label: "$161.12" }
-      ]},
-      { time: "12:05 PM", title: "Licensed Battlefield Guided Tour", note: "With Paul Bailey · Until 3:05 PM" },
-      { time: "3:05 PM", title: "Explore Downtown Gettysburg", note: "Late lunch, shops, battlefield sites" },
-      { time: "~4:30 PM", title: "Drive Back to Arlington", note: "~1.5 hours" },
-      { time: "~6:00 PM", title: "Return Rental Car at Avis", note: "Return by 8:00 AM Jul 6", pills: [
-        { type: "addr", label: "1100 S Hayes St, Arlington VA 22202" }
-      ]}
-    ]
-  },
-  {
-    date: "Jul 6", dayOfWeek: "Mon", icon: "🪖", theme: "ARLINGTON",
-    events: [
-      { time: "9:00 AM", title: "Walk to Arlington National Cemetery", note: "~10 min walk from Airbnb", pills: [
-        { type: "addr", label: "Arlington National Cemetery, Arlington VA" }
-      ]},
-      { time: "10:00 AM", title: "Changing of the Guard", note: "Tomb of the Unknown Soldier" },
-      { time: "12:00 PM", title: "Lunch near Pentagon City", note: "TBD" },
-      { time: "1:30 PM", title: "Pentagon Memorial", note: "~5 min walk from Airbnb", pills: [
-        { type: "addr", label: "1 Rotary Rd, Arlington VA 22202" },
-        { type: "cost", label: "Free" }
-      ]},
-      { time: "7:00 PM", title: "Metro to National Mall" },
-      { time: "7:30 PM", title: "Monuments at Night", note: "Lincoln · WWII · Vietnam · Korea · MLK" }
-    ]
-  },
-  {
-    date: "Jul 7", dayOfWeek: "Tue", icon: "🦀", theme: "BALTIMORE",
-    events: [
-      { time: "10:30 AM", title: "Metro to Union Station" },
-      { time: "11:06 AM", title: "MARC/Amtrak to Baltimore", pills: [
-        { type: "addr", label: "50 Massachusetts Ave NE, DC" },
-        { type: "conf", label: "Res: 47AAD6" },
-        { type: "cost", label: "$66 RT" }
-      ]},
-      { time: "11:45 AM", title: "Arrive Baltimore · Uber to Inner Harbor", pills: [
-        { type: "addr", label: "Inner Harbor, Baltimore MD" }
-      ]},
-      { time: "12:00 PM", title: "National Aquarium", note: "Book 12:00 PM entry at aqua.org — NOT YET BOOKED", pills: [
-        { type: "addr", label: "501 E Pratt St, Baltimore MD" },
-        { type: "alert", label: "⚠️ Still to Book — aqua.org" }
-      ]},
-      { time: "2:30 PM", title: "Lunch at Inner Harbor", note: "LP Steamers for crab cakes 🦀", pills: [
-        { type: "addr", label: "1100 E Fort Ave, Baltimore MD (LP Steamers)" }
-      ]},
-      { time: "3:30 PM", title: "Maryland Science Center + IMAX", note: "Until 5:30 PM", pills: [
-        { type: "addr", label: "601 Light St, Baltimore MD" }
-      ]},
-      { time: "5:30 PM", title: "Dinner near Camden Yards", note: "TBD" },
-      { time: "7:05 PM", title: "⚾ Orioles vs Cubs", note: "Camden Yards · 3 tickets (SeatGeek)", pills: [
-        { type: "addr", label: "333 W Camden St, Baltimore MD" },
-        { type: "conf", label: "3 tickets via SeatGeek" }
-      ]},
-      { time: "10:38 PM", title: "MARC Train Returns to DC", pills: [
-        { type: "conf", label: "Res: 47AAD6" }
-      ]},
-      { time: "~11:15 PM", title: "Back in Arlington", note: "Metro from Union Station" }
-    ]
-  },
-  {
-    date: "Jul 8", dayOfWeek: "Wed", icon: "⚓", theme: "GEORGETOWN",
-    events: [
-      { time: "Morning", title: "Slow Start — Sleep In", note: "Well earned!" },
-      { time: "11:00 AM", title: "Metro to Foggy Bottom", note: "Orange/Blue/Silver line" },
-      { time: "11:30 AM", title: "Georgetown Waterfront & C&O Canal Walk", pills: [
-        { type: "addr", label: "Georgetown Waterfront Park, DC" }
-      ]},
-      { time: "1:00 PM", title: "Lunch in Georgetown", note: "TBD — tons of options on M St" },
-      { time: "3:00 PM", title: "Browse M Street Shops" },
-      { time: "Evening", title: "Final Dinner near Pentagon City", note: "TBD — celebrate the trip!" }
-    ]
-  },
-  {
-    date: "Jul 9", dayOfWeek: "Thu", icon: "🛫", theme: "DEPARTURE",
-    events: [
-      { time: "11:00 AM", title: "Check Out of Airbnb", pills: [
-        { type: "addr", label: "1401 S Joyce St #1112, Arlington VA 22202" }
-      ]},
-      { time: "11:30 AM", title: "Option: National Mall / State Fair or Relax near Pentagon City", note: "Until ~5:30 PM" },
-      { time: "5:30 PM", title: "Metro to DCA", note: "2 stops from Pentagon City station" },
-      { time: "7:57 PM", title: "Depart DCA → XNA", note: "American Airlines", pills: [
-        { type: "conf", label: "Conf: IUOUGR" }
-      ]}
-    ]
+/* ================================================================
+   FIREBASE CONFIG
+   ----------------------------------------------------------------
+   Replace the placeholder values below with your Firebase project
+   config. You can find these in:
+     Firebase Console → Project Settings → Your apps → Web app
+   ================================================================ */
+const FB_CONFIG = {
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId:         "YOUR_PROJECT_ID",
+  storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId:             "YOUR_APP_ID"
+};
+
+/* ── init Firebase ── */
+let db = null, stor = null, fbReady = false;
+try {
+  if (FB_CONFIG.apiKey !== "YOUR_API_KEY") {
+    firebase.initializeApp(FB_CONFIG);
+    db      = firebase.firestore();
+    stor    = firebase.storage();
+    fbReady = true;
   }
+} catch(e) { console.warn('Firebase init:', e); }
+
+/* ================================================================
+   TRIP DATA
+   ================================================================ */
+const DAYS = [
+  { date:"Jun 29", dow:"Mon", icon:"✈️", theme:"ARRIVE", events:[
+    { t:"10:49 AM", title:"Land at DCA", note:"Flight AA3824 from XNA", pills:[{k:"conf",l:"Conf: IUOUGR"}] },
+    { t:"11:15 AM", title:"Metro to Pentagon City", note:"Blue/Yellow line from Reagan National" },
+    { t:"11:30 AM", title:"Fashion Centre — lunch & decompress", pills:[{k:"addr",l:"1100 S Hayes St, Arlington VA"}] },
+    { t:"3:00 PM",  title:"Check in to Airbnb", pills:[{k:"addr",l:"1401 S Joyce St #1112, Arlington VA"}] },
+    { t:"5:00 PM",  title:"Great American State Fair", note:"National Mall · Free · Open until 9 PM", pills:[{k:"cost",l:"Free"}] }
+  ]},
+  { date:"Jun 30", dow:"Tue", icon:"🏛️", theme:"MUSEUMS", events:[
+    { t:"9:45 AM",  title:"Arrive Holocaust Museum", note:"14th St entrance", pills:[{k:"conf",l:"Order #457665617"},{k:"addr",l:"100 Raoul Wallenberg Pl SW"}] },
+    { t:"10:00 AM", title:"US Holocaust Memorial Museum", note:"3 tickets · Allow ~3.5 hrs" },
+    { t:"1:30 PM",  title:"Lunch near National Mall" },
+    { t:"2:30 PM",  title:"African American History & Culture Museum", note:"3 passes confirmed · Until 6 PM", pills:[{k:"addr",l:"1400 Constitution Ave NW"},{k:"conf",l:"3 passes confirmed"}] }
+  ]},
+  { date:"Jul 1", dow:"Wed", icon:"🚀", theme:"SCIENCE", events:[
+    { t:"10:00 AM", title:"Air and Space Museum", note:"Free · Until 12:30 PM", pills:[{k:"addr",l:"600 Independence Ave SW"},{k:"cost",l:"Free"}] },
+    { t:"12:30 PM", title:"Lunch near Mall" },
+    { t:"2:00 PM",  title:"National Geographic Museum", note:"Until 4:30 PM", pills:[{k:"addr",l:"1145 17th St NW"},{k:"cost",l:"~$20/adult"}] },
+    { t:"Dusk",     title:"Optional Monuments Walk", note:"Lincoln · WWII · Vietnam · Korea · MLK" }
+  ]},
+  { date:"Jul 2", dow:"Thu", icon:"🔔", theme:"PHILADELPHIA", events:[
+    { t:"6:30 AM",  title:"Metro to Union Station" },
+    { t:"7:06 AM",  title:"Amtrak 172 Departs", note:"DC Union Station → Philadelphia 30th St", pills:[{k:"conf",l:"Res: 47A56A"},{k:"cost",l:"$168 RT"}] },
+    { t:"9:08 AM",  title:"Arrive Philadelphia 30th St" },
+    { t:"9:30 AM",  title:"Liberty Bell Center", note:"Free · Walk-in", pills:[{k:"addr",l:"526 Market St"},{k:"cost",l:"Free"}] },
+    { t:"10:00 AM", title:"Independence Hall", note:"First-come first-served Jul 2", pills:[{k:"addr",l:"520 Chestnut St"},{k:"cost",l:"Free"}] },
+    { t:"11:00 AM", title:"National Constitution Center", pills:[{k:"addr",l:"525 Arch St"},{k:"cost",l:"~$20/adult"}] },
+    { t:"12:35 PM", title:"⚾ Phillies vs Pirates", note:"Citizens Bank Park · 3 tickets", pills:[{k:"addr",l:"1 Citizens Bank Way"},{k:"conf",l:"SeatGeek"}] },
+    { t:"3:30 PM",  title:"Italian Market (9th Street)", pills:[{k:"addr",l:"9th St, Philadelphia"}] },
+    { t:"5:00 PM",  title:"Dinner — Italian Market Area" },
+    { t:"6:51 PM",  title:"Amtrak 193 Returns to DC", pills:[{k:"conf",l:"Res: 47A56A"}] },
+    { t:"~8:30 PM", title:"Back in Arlington" }
+  ]},
+  { date:"Jul 3", dow:"Fri", icon:"🕵️", theme:"HISTORY & SPY", events:[
+    { t:"10:00 AM", title:"American History Museum", note:"America 250 exhibit · Free", pills:[{k:"addr",l:"1300 Constitution Ave NW"},{k:"cost",l:"Free"}] },
+    { t:"1:00 PM",  title:"Lunch near Mall" },
+    { t:"7:00 PM",  title:"Spy Tour", note:"Book via Viator — NOT YET BOOKED", pills:[{k:"alert",l:"⚠️ Still to Book"}] }
+  ]},
+  { date:"Jul 4", dow:"Sat", icon:"🎆", theme:"INDEPENDENCE DAY", events:[
+    { t:"9:30 AM",  title:"Metro to Nationals Park", note:"Blue → Yellow → Navy Yard" },
+    { t:"11:05 AM", title:"⚾ Nationals vs Pirates", note:"3 tickets confirmed", pills:[{k:"addr",l:"1500 S Capitol St SE"},{k:"conf",l:"3 tickets confirmed"}] },
+    { t:"~3:00 PM", title:"Old Town Alexandria Waterfront" },
+    { t:"7:00 PM",  title:"🍽️ Founding Farmers Alexandria", pills:[{k:"addr",l:"461 Swann Ave, Alexandria VA"},{k:"conf",l:"Conf: 99064"},{k:"phone",l:"703-594-1445"}] },
+    { t:"~9:15 PM", title:"America 250 Fireworks 🎇", note:"DC skyline across the Potomac" }
+  ]},
+  { date:"Jul 5", dow:"Sun", icon:"⚔️", theme:"GETTYSBURG", events:[
+    { t:"8:00 AM",  title:"Pick Up Avis Rental Car", note:"Ford Mustang Mach-E or similar", pills:[{k:"addr",l:"1100 S Hayes St, Arlington"},{k:"conf",l:"Avis: 17154969US6"}] },
+    { t:"~10:00 AM",title:"Drive to Gettysburg (~1.5 hrs)" },
+    { t:"11:50 AM", title:"Arrive Gettysburg Heritage Center", note:"Meet guide Paul Bailey in lobby", pills:[{k:"addr",l:"297 Steinwehr Ave, Gettysburg PA"},{k:"conf",l:"Conf: 585B3C"},{k:"cost",l:"$161.12"}] },
+    { t:"12:05 PM", title:"Licensed Battlefield Guided Tour", note:"Paul Bailey · Until 3:05 PM" },
+    { t:"3:05 PM",  title:"Explore Downtown Gettysburg" },
+    { t:"~6:00 PM", title:"Return Rental Car at Avis" }
+  ]},
+  { date:"Jul 6", dow:"Mon", icon:"🪖", theme:"ARLINGTON", events:[
+    { t:"9:00 AM",  title:"Arlington National Cemetery", note:"~10 min walk from Airbnb", pills:[{k:"addr",l:"Arlington National Cemetery, VA"}] },
+    { t:"10:00 AM", title:"Changing of the Guard", note:"Tomb of the Unknown Soldier" },
+    { t:"12:00 PM", title:"Lunch near Pentagon City" },
+    { t:"1:30 PM",  title:"Pentagon Memorial", note:"~5 min walk", pills:[{k:"addr",l:"1 Rotary Rd, Arlington VA"},{k:"cost",l:"Free"}] },
+    { t:"7:30 PM",  title:"Monuments at Night", note:"Lincoln · WWII · Vietnam · Korea · MLK" }
+  ]},
+  { date:"Jul 7", dow:"Tue", icon:"🦀", theme:"BALTIMORE", events:[
+    { t:"11:06 AM", title:"MARC/Amtrak to Baltimore", pills:[{k:"conf",l:"Res: 47AAD6"},{k:"cost",l:"$66 RT"}] },
+    { t:"11:45 AM", title:"Arrive · Uber to Inner Harbor" },
+    { t:"12:00 PM", title:"National Aquarium", note:"Book at aqua.org — NOT YET BOOKED", pills:[{k:"addr",l:"501 E Pratt St, Baltimore"},{k:"alert",l:"⚠️ Book at aqua.org"}] },
+    { t:"2:30 PM",  title:"Lunch — LP Steamers 🦀", note:"Famous crab cakes", pills:[{k:"addr",l:"1100 E Fort Ave, Baltimore"}] },
+    { t:"3:30 PM",  title:"Maryland Science Center + IMAX", pills:[{k:"addr",l:"601 Light St, Baltimore"}] },
+    { t:"7:05 PM",  title:"⚾ Orioles vs Cubs", note:"Camden Yards · 3 tickets", pills:[{k:"addr",l:"333 W Camden St, Baltimore"},{k:"conf",l:"SeatGeek"}] },
+    { t:"10:38 PM", title:"MARC Train Returns to DC", pills:[{k:"conf",l:"Res: 47AAD6"}] }
+  ]},
+  { date:"Jul 8", dow:"Wed", icon:"⚓", theme:"GEORGETOWN", events:[
+    { t:"Morning",  title:"Sleep In — Well Earned! 😴" },
+    { t:"11:30 AM", title:"Georgetown Waterfront & C&O Canal Walk", pills:[{k:"addr",l:"Georgetown Waterfront Park, DC"}] },
+    { t:"1:00 PM",  title:"Lunch in Georgetown" },
+    { t:"3:00 PM",  title:"Browse M Street Shops" },
+    { t:"Evening",  title:"Final Dinner near Pentagon City" }
+  ]},
+  { date:"Jul 9", dow:"Thu", icon:"🛫", theme:"DEPARTURE", events:[
+    { t:"11:00 AM", title:"Check Out of Airbnb", pills:[{k:"addr",l:"1401 S Joyce St #1112, Arlington VA"}] },
+    { t:"11:30 AM", title:"National Mall / Relax near Pentagon City", note:"Until ~5:30 PM" },
+    { t:"5:30 PM",  title:"Metro to DCA", note:"2 stops from Pentagon City" },
+    { t:"7:57 PM",  title:"Depart DCA → XNA", note:"American Airlines", pills:[{k:"conf",l:"Conf: IUOUGR"}] }
+  ]}
 ];
 
-function pillClass(type) {
-  return { conf: 'pill-conf', addr: 'pill-addr', cost: 'pill-cost', alert: 'pill-alert', phone: 'pill-phone' }[type] || 'pill-conf';
+/* ================================================================
+   ROUTER
+   ================================================================ */
+function go(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const nb = document.getElementById('nb-' + page);
+  if (nb) nb.classList.add('active');
+  document.getElementById('fab-pack').classList.toggle('vis', page === 'packing');
+  document.getElementById('fab-pic').classList.toggle('vis', page === 'pictures' && fbReady);
+  window.scrollTo(0, 0);
+  if (page === 'pictures') initPhotos();
 }
 
-function pillIcon(type) {
-  return { conf: '🔑', addr: '📍', cost: '💰', alert: '⚠️', phone: '📞' }[type] || '';
-}
+/* ================================================================
+   DAILY SCHEDULE
+   ================================================================ */
+const PC = { conf:'p-conf', addr:'p-addr', cost:'p-cost', alert:'p-alert', phone:'p-phone' };
+const PI = { conf:'🔑', addr:'📍', cost:'💰', alert:'⚠️', phone:'📞' };
 
-function renderPills(pills) {
-  if (!pills || pills.length === 0) return '';
-  return `<div class="conf-row">${pills.map(p => `<span class="pill ${pillClass(p.type)}">${pillIcon(p.type)} ${p.label}</span>`).join('')}</div>`;
-}
+(function buildSchedule() {
+  const tabs   = document.getElementById('dayTabs');
+  const panels = document.getElementById('dayPanels');
+  DAYS.forEach((d, i) => {
+    const tab = document.createElement('div');
+    tab.className = 'day-tab' + (i === 0 ? ' active' : '');
+    tab.innerHTML = `<span class="dn">${d.date.split(' ')[1]}</span>${d.date.split(' ')[0]}`;
+    tab.onclick = () => switchDay(i);
+    tabs.appendChild(tab);
 
-function renderEvent(ev) {
-  return `
-    <div class="event">
-      <div class="event-time">${ev.time}</div>
-      <div class="event-body">
-        <div class="event-title">${ev.title}</div>
-        ${ev.note ? `<div class="event-note">${ev.note}</div>` : ''}
-        ${renderPills(ev.pills)}
+    const panel = document.createElement('div');
+    panel.className = 'day-panel' + (i === 0 ? ' active' : '');
+    panel.innerHTML = `
+      <div class="day-hdr">
+        <span class="dh-icon">${d.icon}</span>
+        <div><h2>${d.theme}</h2><div class="dh-date">${d.date} · ${d.dow}</div></div>
       </div>
-    </div>
-  `;
+      <div class="events">
+        ${d.events.map(ev => `
+          <div class="ev">
+            <div class="ev-time">${ev.t}</div>
+            <div>
+              <div class="ev-title">${ev.title}</div>
+              ${ev.note ? `<div class="ev-note">${ev.note}</div>` : ''}
+              ${ev.pills ? `<div class="ev-pills">${ev.pills.map(p =>`<span class="pill ${PC[p.k]}">${PI[p.k]} ${p.l}</span>`).join('')}</div>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>`;
+    panels.appendChild(panel);
+  });
+})();
+
+function switchDay(i) {
+  document.querySelectorAll('.day-tab').forEach((t, j)  => t.classList.toggle('active', j === i));
+  document.querySelectorAll('.day-panel').forEach((p, j) => p.classList.toggle('active', j === i));
+  document.querySelectorAll('.day-tab')[i].scrollIntoView({ behavior:'smooth', inline:'center' });
+  window.scrollTo(0, 0);
 }
 
-// Build tabs
-const tabsEl = document.getElementById('dayTabs');
-days.forEach((day, i) => {
-  const tab = document.createElement('div');
-  tab.className = 'day-tab' + (i === 0 ? ' active' : '');
-  tab.innerHTML = `<span class="date-num">${day.date.split(' ')[1]}</span>${day.date.split(' ')[0]}`;
-  tab.dataset.idx = i;
-  tab.addEventListener('click', () => switchDay(i));
-  tabsEl.appendChild(tab);
-});
+/* ================================================================
+   PACKING LIST
+   ================================================================ */
+let items = [], packFilter = 'All', selPerson = null, packUnsub = null;
 
-// Build panels
-const mainEl = document.getElementById('mainContent');
+(function initPacking() {
+  if (fbReady) {
+    packUnsub = db.collection('packing').orderBy('createdAt').onSnapshot(snap => {
+      items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderPacking();
+    });
+  } else {
+    document.getElementById('pack-banner').style.display = 'block';
+    items = JSON.parse(localStorage.getItem('dc26_pack') || '[]');
+    renderPacking();
+  }
+})();
 
-// Trip info card
-mainEl.innerHTML = `
-  <div class="info-card">
-    <div class="info-card-header">✈️ Flights</div>
-    <div class="info-card-body">
-      <div class="info-row"><span class="info-label">Inbound</span><span class="info-value">AA3824 · XNA→DCA · Jun 29 · Arrives 10:49 AM</span></div>
-      <div class="info-row"><span class="info-label">Outbound</span><span class="info-value">AA · DCA→XNA · Jul 9 · Departs 7:57 PM</span></div>
-      <div class="info-row"><span class="info-label">Confirmation</span><span class="info-value">IUOUGR</span></div>
-    </div>
-  </div>
-  <div class="info-card">
-    <div class="info-card-header">🏠 Airbnb</div>
-    <div class="info-card-body">
-      <div class="info-row"><span class="info-label">Address</span><span class="info-value">1401 S Joyce St #1112, Arlington VA 22202</span></div>
-      <div class="info-row"><span class="info-label">Check-in</span><span class="info-value">Jun 29 · 3:00 PM</span></div>
-      <div class="info-row"><span class="info-label">Check-out</span><span class="info-value">Jul 9 · 11:00 AM</span></div>
-    </div>
-  </div>
-  <div class="todo-card">
-    <h3>⚠️ Still to Book</h3>
-    <div class="todo-item">🕵️ <div><strong>Spy Tour</strong> — Jul 3 evening · Book via Viator or operator TBD</div></div>
-    <div class="todo-item">🐠 <div><strong>National Aquarium Baltimore</strong> — Jul 7 · 12:00 PM entry · <strong>aqua.org</strong></div></div>
-  </div>
-`;
+function savePack() { if (!fbReady) localStorage.setItem('dc26_pack', JSON.stringify(items)); }
 
-days.forEach((day, i) => {
-  const panel = document.createElement('div');
-  panel.className = 'day-panel' + (i === 0 ? ' active' : '');
-  panel.id = `panel-${i}`;
-  panel.innerHTML = `
-    <div class="day-header">
-      <div class="theme-icon">${day.icon}</div>
-      <div>
-        <h2>${day.theme}</h2>
-        <div class="day-date">${day.date} · ${day.dayOfWeek}</div>
+function renderPacking() {
+  const total = items.length;
+  const packed = items.filter(i => i.packed).length;
+  const pct = total ? Math.round(packed / total * 100) : 0;
+  document.getElementById('pbFill').style.width = pct + '%';
+  document.getElementById('pbText').textContent = `${packed} / ${total} packed`;
+
+  const vis = packFilter === 'All' ? items : items.filter(i => i.assignedTo === packFilter);
+  const el = document.getElementById('packItems');
+  if (!vis.length) {
+    el.innerHTML = `<div class="empty"><div class="ei">🧳</div><p>${packFilter === 'All' ? 'No items yet — tap + to add.' : 'No items for ' + packFilter + '.'}</p></div>`;
+    return;
+  }
+  el.innerHTML = vis.map(item => `
+    <div class="pack-item ${item.packed ? 'done' : ''}">
+      <div class="chk ${item.packed ? 'on' : ''}" onclick="togglePack('${item.id}')">${item.packed ? '✓' : ''}</div>
+      <div class="pi-info">
+        <div class="pi-name">${item.name}</div>
+        <span class="pi-tag t-${item.assignedTo}">${item.assignedTo}</span>
       </div>
-    </div>
-    <div class="events-list">
-      ${day.events.map(renderEvent).join('')}
-    </div>
-  `;
-  mainEl.appendChild(panel);
-});
-
-// Show first panel by default
-document.getElementById('panel-0').classList.add('active');
-
-function switchDay(idx) {
-  document.querySelectorAll('.day-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
-  document.querySelectorAll('.day-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
-  // Scroll the main area to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  // Scroll tab into view
-  const tabs = document.querySelectorAll('.day-tab');
-  tabs[idx].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+      <button class="pi-del" onclick="deletePack('${item.id}')">✕</button>
+    </div>`).join('');
 }
+
+function setFilter(f) {
+  packFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  document.getElementById('f-' + f).classList.add('active');
+  renderPacking();
+}
+
+function openModal() {
+  selPerson = null;
+  document.getElementById('itemName').value = '';
+  document.querySelectorAll('.per-opt').forEach(p => p.className = 'per-opt');
+  document.getElementById('addModal').classList.add('vis');
+  setTimeout(() => document.getElementById('itemName').focus(), 120);
+}
+function closeModal() { document.getElementById('addModal').classList.remove('vis'); }
+
+function pickPerson(p) {
+  selPerson = p;
+  document.querySelectorAll('.per-opt').forEach(el => el.className = 'per-opt');
+  document.getElementById('p-' + p).className = 'per-opt sel-' + p;
+}
+
+async function addItem() {
+  const name = document.getElementById('itemName').value.trim();
+  if (!name)      { alert('Enter an item name.'); return; }
+  if (!selPerson) { alert('Select who this item is for.'); return; }
+  const item = { name, assignedTo: selPerson, packed: false, createdAt: new Date().toISOString() };
+  if (fbReady) {
+    await db.collection('packing').add({ ...item, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+  } else {
+    item.id = 'l' + Date.now();
+    items.push(item);
+    savePack();
+    renderPacking();
+  }
+  closeModal();
+}
+
+async function togglePack(id) {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+  if (fbReady) {
+    await db.collection('packing').doc(id).update({ packed: !item.packed });
+  } else {
+    item.packed = !item.packed;
+    savePack();
+    renderPacking();
+  }
+}
+
+async function deletePack(id) {
+  if (!confirm('Remove this item?')) return;
+  if (fbReady) {
+    await db.collection('packing').doc(id).delete();
+  } else {
+    items = items.filter(i => i.id !== id);
+    savePack();
+    renderPacking();
+  }
+}
+
+/* Enter key submits modal */
+document.getElementById('itemName').addEventListener('keydown', e => { if (e.key === 'Enter') addItem(); });
+
+/* ================================================================
+   PICTURES
+   ================================================================ */
+let photos = [], curPhoto = -1, picInited = false;
+
+function initPhotos() {
+  if (picInited) return;
+  picInited = true;
+  if (!fbReady) {
+    document.getElementById('pic-banner').style.display = 'block';
+    document.getElementById('photoLoading').style.display = 'none';
+    document.getElementById('photoEmpty').style.display = 'block';
+    return;
+  }
+  db.collection('photos').orderBy('uploadedAt', 'desc').onSnapshot(snap => {
+    photos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderPhotos();
+  });
+}
+
+function renderPhotos() {
+  document.getElementById('photoLoading').style.display = 'none';
+  const grid  = document.getElementById('photoGrid');
+  const empty = document.getElementById('photoEmpty');
+  if (!photos.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  grid.innerHTML = photos.map((p, i) => `
+    <div class="photo-cell" onclick="openLbx(${i})">
+      <img src="${p.url}" alt="${p.filename || 'photo'}" loading="lazy" />
+    </div>`).join('');
+}
+
+async function uploadPhotos(e) {
+  const files = Array.from(e.target.files);
+  if (!files.length || !fbReady) return;
+  const fab = document.getElementById('fab-pic');
+  fab.textContent = '⏳'; fab.disabled = true;
+  try {
+    for (const file of files) {
+      const path = `photos/${Date.now()}_${file.name}`;
+      const snap = await stor.ref(path).put(file);
+      const url  = await snap.ref.getDownloadURL();
+      await db.collection('photos').add({
+        url,
+        filename: file.name,
+        storagePath: path,
+        uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  } catch(err) { alert('Upload failed: ' + err.message); }
+  fab.textContent = '+'; fab.disabled = false;
+  e.target.value = '';
+}
+
+function openLbx(i) {
+  curPhoto = i;
+  document.getElementById('lbxImg').src = photos[i].url;
+  document.getElementById('lbxCap').textContent = photos[i].filename || '';
+  document.getElementById('lbx').classList.add('vis');
+}
+function closeLbx() { document.getElementById('lbx').classList.remove('vis'); curPhoto = -1; }
+
+async function deletePhoto() {
+  if (curPhoto < 0 || !confirm('Delete this photo?')) return;
+  const p = photos[curPhoto];
+  try {
+    if (p.storagePath) await stor.ref(p.storagePath).delete();
+    await db.collection('photos').doc(p.id).delete();
+  } catch(err) { alert('Delete failed: ' + err.message); }
+  closeLbx();
+}
+
+/* Escape closes overlay/lightbox */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeLbx(); closeModal(); }
+});
 </script>
-
 </body>
 </html>
