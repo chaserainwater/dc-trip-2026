@@ -438,6 +438,34 @@
     .banner h4 { font-size: .82rem; font-weight: 700; color: #c2410c; margin-bottom: 4px; }
     .banner p { font-size: .78rem; color: #7c2d12; line-height: 1.55; }
     .loading { text-align: center; padding: 40px; color: var(--gray); font-size: .88rem; }
+
+    /* ── TODO LIST ── */
+    .todo-progress-row {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .todo-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 8px;
+      transition: opacity .2s;
+    }
+    .todo-item.done { opacity: .45; }
+    .todo-item.done .td-name { text-decoration: line-through; color: var(--gray); }
+    .td-name { font-size: .9rem; font-weight: 600; flex: 1; }
+    .td-del { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; padding: 4px; opacity: .55; }
+    .td-del:hover { opacity: 1; }
   </style>
 </head>
 <body>
@@ -465,6 +493,10 @@
     <div class="home-card" onclick="go('pictures')">
       <div class="hc-icon">📸</div>
       <div class="hc-label">Pictures</div>
+    </div>
+    <div class="home-card" onclick="go('todo')" style="grid-column:1/-1;flex-direction:row;justify-content:center;gap:16px;padding:18px 20px;">
+      <div class="hc-icon">✅</div>
+      <div class="hc-label" style="text-align:left;">Pre-Trip<br>To-Do List</div>
     </div>
   </div>
 </div>
@@ -599,18 +631,37 @@
   <input type="file" id="picInput" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)" />
 </div>
 
+<!-- ══════════════════════ TODO PAGE ══════════════════════ -->
+<div id="page-todo" class="page">
+  <div class="page-header">
+    <div class="page-header-row">
+      <button class="back-btn" onclick="go('home')">←</button>
+      <h1>Pre-Trip To-Do</h1>
+    </div>
+  </div>
+  <div class="content">
+    <div class="todo-progress-row">
+      <div class="pb-wrap"><div class="pb-fill" id="tdFill" style="width:0%"></div></div>
+      <span class="pb-text" id="tdText">0 / 0 done</span>
+    </div>
+    <div id="todoItems"></div>
+  </div>
+</div>
+
 <!-- ══════════════════════ BOTTOM NAV ══════════════════════ -->
-<nav class="bottom-nav">
+<nav class="bottom-nav" style="font-size:.52rem;">
   <button class="nav-btn active" id="nb-home"     onclick="go('home')">    <span class="ni">🏠</span>Home</button>
   <button class="nav-btn"        id="nb-lodging"  onclick="go('lodging')"> <span class="ni">🏨</span>Lodging</button>
   <button class="nav-btn"        id="nb-schedule" onclick="go('schedule')"><span class="ni">📅</span>Schedule</button>
   <button class="nav-btn"        id="nb-packing"  onclick="go('packing')"> <span class="ni">🧳</span>Packing</button>
   <button class="nav-btn"        id="nb-pictures" onclick="go('pictures')"><span class="ni">📸</span>Photos</button>
+  <button class="nav-btn"        id="nb-todo"     onclick="go('todo')">    <span class="ni">✅</span>To-Do</button>
 </nav>
 
 <!-- FABs -->
 <button class="fab" id="fab-pack" onclick="openModal()">+</button>
 <button class="fab" id="fab-pic"  onclick="document.getElementById('picInput').click()">+</button>
+<button class="fab" id="fab-todo" onclick="openTodoModal()">+</button>
 
 <!-- ══════════════════════ ADD ITEM MODAL ══════════════════════ -->
 <div class="overlay" id="addModal" onclick="if(event.target===this)closeModal()">
@@ -634,6 +685,19 @@
   </div>
 </div>
 
+<!-- ══════════════════════ ADD TODO MODAL ══════════════════════ -->
+<div class="overlay" id="todoModal" onclick="if(event.target===this)closeTodoModal()">
+  <div class="modal">
+    <h3>✅ Add To-Do Item</h3>
+    <div class="fg">
+      <label>What needs to be done?</label>
+      <input type="text" id="todoName" placeholder="e.g. Book National Aquarium tickets…" />
+    </div>
+    <button class="btn-prim" onclick="addTodo()">Add Item</button>
+    <button class="btn-cancel" onclick="closeTodoModal()">Cancel</button>
+  </div>
+</div>
+
 <!-- ══════════════════════ LIGHTBOX ══════════════════════ -->
 <div class="lbx" id="lbx" onclick="if(event.target===this)closeLbx()">
   <div class="lbx-controls">
@@ -650,13 +714,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
-/* ================================================================
-   FIREBASE CONFIG
-   ----------------------------------------------------------------
-   Replace the placeholder values below with your Firebase project
-   config. You can find these in:
-     Firebase Console → Project Settings → Your apps → Web app
-   ================================================================ */
 const FB_CONFIG = {
   apiKey:            "AIzaSyDg1VpDSzpR2XjTRpsIH6pUQTCLM1jt_Aw",
   authDomain:        "dc-trip-2026.firebaseapp.com",
@@ -666,7 +723,6 @@ const FB_CONFIG = {
   appId:             "1:189552229058:web:5826551a655a57eaa7d95b"
 };
 
-/* ── init Firebase ── */
 let db = null, stor = null, fbReady = false;
 try {
   if (FB_CONFIG.apiKey !== "YOUR_API_KEY") {
@@ -677,9 +733,6 @@ try {
   }
 } catch(e) { console.warn('Firebase init:', e); }
 
-/* ================================================================
-   TRIP DATA
-   ================================================================ */
 const DAYS = [
   { date:"Jun 29", dow:"Mon", icon:"✈️", theme:"ARRIVE", events:[
     { t:"10:49 AM", title:"Land at DCA", note:"Flight AA3824 from XNA", pills:[{k:"conf",l:"Conf: IUOUGR"}] },
@@ -764,9 +817,6 @@ const DAYS = [
   ]}
 ];
 
-/* ================================================================
-   ROUTER
-   ================================================================ */
 function go(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -775,13 +825,11 @@ function go(page) {
   if (nb) nb.classList.add('active');
   document.getElementById('fab-pack').classList.toggle('vis', page === 'packing');
   document.getElementById('fab-pic').classList.toggle('vis', page === 'pictures' && fbReady);
+  document.getElementById('fab-todo').classList.toggle('vis', page === 'todo');
   window.scrollTo(0, 0);
   if (page === 'pictures') initPhotos();
 }
 
-/* ================================================================
-   DAILY SCHEDULE
-   ================================================================ */
 const PC = { conf:'p-conf', addr:'p-addr', cost:'p-cost', alert:'p-alert', phone:'p-phone' };
 const PI = { conf:'🔑', addr:'📍', cost:'💰', alert:'⚠️', phone:'📞' };
 
@@ -824,9 +872,6 @@ function switchDay(i) {
   window.scrollTo(0, 0);
 }
 
-/* ================================================================
-   PACKING LIST
-   ================================================================ */
 let items = [], packFilter = 'All', selPerson = null, packUnsub = null;
 
 (function initPacking() {
@@ -929,12 +974,8 @@ async function deletePack(id) {
   }
 }
 
-/* Enter key submits modal */
 document.getElementById('itemName').addEventListener('keydown', e => { if (e.key === 'Enter') addItem(); });
 
-/* ================================================================
-   PICTURES
-   ================================================================ */
 let photos = [], curPhoto = -1, picInited = false;
 
 function initPhotos() {
@@ -1004,9 +1045,92 @@ async function deletePhoto() {
   closeLbx();
 }
 
-/* Escape closes overlay/lightbox */
+/* ── PRE-TRIP TO-DO ── */
+let todos = [], todoUnsub = null;
+
+(function initTodos() {
+  if (fbReady) {
+    todoUnsub = db.collection('todos').orderBy('createdAt').onSnapshot(snap => {
+      todos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderTodos();
+    });
+  } else {
+    todos = JSON.parse(localStorage.getItem('dc26_todos') || '[]');
+    renderTodos();
+  }
+})();
+
+function saveTodos() { if (!fbReady) localStorage.setItem('dc26_todos', JSON.stringify(todos)); }
+
+function renderTodos() {
+  const total = todos.length;
+  const done  = todos.filter(t => t.done).length;
+  const pct   = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('tdFill').style.width = pct + '%';
+  document.getElementById('tdText').textContent = `${done} / ${total} done`;
+
+  const el = document.getElementById('todoItems');
+  if (!todos.length) {
+    el.innerHTML = `<div class="empty"><div class="ei">✅</div><p>No to-do items yet.<br>Tap + to add one!</p></div>`;
+    return;
+  }
+  el.innerHTML = todos.map(t => `
+    <div class="todo-item ${t.done ? 'done' : ''}">
+      <div class="chk ${t.done ? 'on' : ''}" onclick="toggleTodo('${t.id}')">${t.done ? '✓' : ''}</div>
+      <div class="td-name">${t.name}</div>
+      <button class="td-del" onclick="deleteTodo('${t.id}')">✕</button>
+    </div>`).join('');
+}
+
+function openTodoModal() {
+  document.getElementById('todoName').value = '';
+  document.getElementById('todoModal').classList.add('vis');
+  setTimeout(() => document.getElementById('todoName').focus(), 120);
+}
+function closeTodoModal() { document.getElementById('todoModal').classList.remove('vis'); }
+
+async function addTodo() {
+  const name = document.getElementById('todoName').value.trim();
+  if (!name) { alert('Enter a to-do item.'); return; }
+  const todo = { name, done: false, createdAt: new Date().toISOString() };
+  if (fbReady) {
+    await db.collection('todos').add({ ...todo, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+  } else {
+    todo.id = 'l' + Date.now();
+    todos.push(todo);
+    saveTodos();
+    renderTodos();
+  }
+  closeTodoModal();
+}
+
+async function toggleTodo(id) {
+  const t = todos.find(t => t.id === id);
+  if (!t) return;
+  if (fbReady) {
+    await db.collection('todos').doc(id).update({ done: !t.done });
+  } else {
+    t.done = !t.done;
+    saveTodos();
+    renderTodos();
+  }
+}
+
+async function deleteTodo(id) {
+  if (!confirm('Remove this to-do item?')) return;
+  if (fbReady) {
+    await db.collection('todos').doc(id).delete();
+  } else {
+    todos = todos.filter(t => t.id !== id);
+    saveTodos();
+    renderTodos();
+  }
+}
+
+document.getElementById('todoName').addEventListener('keydown', e => { if (e.key === 'Enter') addTodo(); });
+
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeLbx(); closeModal(); }
+  if (e.key === 'Escape') { closeLbx(); closeModal(); closeTodoModal(); }
 });
 </script>
 </body>
